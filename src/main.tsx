@@ -20,7 +20,6 @@ const router = createBrowserRouter([
 
         ]
     },
-    // Login and Register routes outside of the BaseLayout
     {
         path: '/login',
         element: <Login />,

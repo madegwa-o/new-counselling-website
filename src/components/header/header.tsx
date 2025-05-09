@@ -1,5 +1,4 @@
 import {
-    Search,
     Sun,
     Moon,
     MessageCircle,      // Muted notifications
@@ -7,6 +6,7 @@ import {
 } from 'lucide-react';
 import styles from './header.module.css';
 import { useTheme } from '../../hooks/themeProvider.tsx';
+import image from '../../assets/karu-logo.jpg'
 
 export default function Header() {
     const { theme, toggleTheme } = useTheme();
@@ -14,7 +14,6 @@ export default function Header() {
     return (
         <div className={styles.container}>
             <div className={styles.headerRow}>
-                <h2>Karu Counceling </h2>
                 <div className={styles.right}>
                     <button onClick={toggleTheme} className={styles.themeToggle}>
                         {theme ? <Moon size={20} /> : <Sun size={20} />}
@@ -24,12 +23,10 @@ export default function Header() {
 
                 </div>
             </div>
-            <form action="#" className={styles.searchForm}>
-                <input type="text" placeholder="Search for..." />
-                <button type="submit" className={styles.searchButton}>
-                    <Search size={20} />
-                </button>
-            </form>
+            <div className={styles.right}>
+
+                <img src={image} alt="logo"/>
+            </div>
         </div>
     );
 }
