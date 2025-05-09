@@ -72,7 +72,7 @@ export default function HomePage() {
                             Book a Session <FaChevronRight className={styles.buttonIcon} />
                         </button>
                         <button className={styles.secondaryButton}>
-                            Explore Resources
+                            Join Us
                         </button>
                     </div>
 
