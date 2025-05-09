@@ -9,8 +9,7 @@ export default function HomePage() {
     // Stats to display
     const stats = [
         { number: '10,000+', label: 'Students supported' },
-        { number: '24/7', label: 'Crisis support' },
-        { number: '50+', label: 'Specialized counselors' },
+
         { number: '98%', label: 'Student satisfaction' }
     ];
 
@@ -61,7 +60,7 @@ export default function HomePage() {
             <section className={styles.heroSection}>
                 <div className={styles.heroContent}>
                     <h1 className={styles.heroTitle}>
-                        Your mental wellbeing matters at <span className={styles.highlight}>Karatuna University</span>
+                        Your mental wellbeing matters at <span className={styles.highlight}>Karatina University</span>
                     </h1>
                     <p className={styles.heroSubtitle}>
                         Karu Counselling provides confidential support, resources, and guidance to help you thrive during your university journey.
@@ -145,15 +144,15 @@ export default function HomePage() {
                     <div className={styles.supportContent}>
                         <h2 className={styles.supportTitle}>Need Immediate Support?</h2>
                         <p className={styles.supportText}>
-                            Our crisis counsellors are available 24/7. Don't hesitate to reach out if you're experiencing a mental health emergency.
+                            Our crisis counsellors are available. Don't hesitate to reach out if you're experiencing a mental health emergency.
                         </p>
                         <button className={styles.emergencyButton}>
                             Get Immediate Help
                         </button>
                     </div>
                     <div className={styles.contactInfo}>
-                        <p className={styles.contactItem}>Campus Emergency: <strong>555-1234</strong></p>
-                        <p className={styles.contactItem}>National Helpline: <strong>1-800-273-8255</strong></p>
+                        {/*<p className={styles.contactItem}>Campus Emergency: <strong>555-1234</strong></p>*/}
+                        {/*<p className={styles.contactItem}>National Helpline: <strong>1-800-273-8255</strong></p>*/}
                     </div>
                 </div>
             </section>
@@ -200,7 +199,7 @@ export default function HomePage() {
                     </div>
 
                     <p className={styles.footerCopyright}>
-                        © {new Date().getFullYear()} Karatuna University. All rights reserved.
+                        © {new Date().getFullYear()} Karatina University. All rights reserved.
                     </p>
                 </div>
             </footer>
