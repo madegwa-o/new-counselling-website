@@ -1,220 +1,293 @@
-/* Login.module.css */
-
-.container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background-color: #dae0e6;
-    padding: 20px;
-}
+/* login.module.css */
 
 .loginContainer {
-    display: flex;
-    width: 850px;
-    min-height: 650px;
-    background-color: white;
-    border-radius: 4px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-}
-
-.loginArt {
-    flex: 0 0 150px;
-    background-image: url('https://www.redditstatic.com/accountmanager/bbb584033aa89e39bad69436c504c9bd.png');
-    background-size: cover;
-    background-position: center;
-    position: relative;
-    color: white;
-    display: flex;
-    align-items: flex-end;
-}
-
-@media (min-width: 768px) {
-    .loginArt {
-        flex: 0 0 40%;
-    }
-}
-
-.artOverlay {
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0) 50%);
-    padding: 20px;
-    width: 100%;
-}
-
-.artOverlay h1 {
-    font-size: 18px;
-    margin-bottom: 8px;
-}
-
-.artOverlay p {
-    font-size: 12px;
-    margin: 0;
-    opacity: 0.8;
-}
-
-.loginFormContainer {
-    flex: 1;
-    padding: 24px;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
+    align-items: center;
     justify-content: center;
+    padding: var(--spacing-lg) var(--spacing-md);
+    background-color: var(--bg-color-secondary);
 }
 
-.formWrapper {
-    max-width: 280px;
-    margin: 0 auto;
+.loginCard {
+    background-color: var(--card-bg);
+    border-radius: var(--border-radius-lg);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.05);
     width: 100%;
+    max-width: 420px;
+    padding: var(--spacing-xl);
+    margin-bottom: var(--spacing-xl);
 }
 
-.formWrapper h2 {
-    font-size: 20px;
-    margin-bottom: 8px;
-    font-weight: 500;
-    color: #1c1c1c;
+/* Logo and Header Styles */
+.logoContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: var(--spacing-lg);
 }
 
-.socialLogins {
-    margin: 16px 0;
+.logoWrapper {
+    margin-bottom: var(--spacing-md);
 }
 
-.socialButton {
+.logoPlaceholder {
+    width: 70px;
+    height: 70px;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 100%;
-    padding: 10px 12px;
-    margin-bottom: 8px;
-    border-radius: 4px;
-    border: 1px solid #dadce0;
-    background-color: white;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.2s;
+    background-color: var(--color-primary);
+    border-radius: 50%;
+    margin-bottom: var(--spacing-md);
 }
 
-.socialButton:hover {
-    background-color: #f5f5f5;
-}
-
-.socialButton img {
-    width: 18px;
-    height: 18px;
-    margin-right: 8px;
-}
-
-.divider {
+.logo {
+    width: 70px;
+    height: 70px;
     display: flex;
     align-items: center;
-    margin: 20px 0;
-    color: #878a8c;
-    font-size: 12px;
+    justify-content: center;
+    background-color: var(--color-primary);
+    border-radius: 50%;
+    margin-bottom: var(--spacing-md);
 }
 
-.divider::before,
-.divider::after {
-    content: '';
+.title {
+    font-size: 1.6rem;
+    font-weight: var(--font-weight-bold);
+    color: var(--text-color);
+    margin-bottom: var(--spacing-sm);
+    text-align: center;
+}
+
+.subtitle {
+    font-size: 0.95rem;
+    color: var(--text-color-secondary);
+    text-align: center;
+    margin-bottom: var(--spacing-sm);
+}
+
+/* Login Method Toggle */
+.loginMethodToggle {
+    display: flex;
+    margin-bottom: var(--spacing-md);
+    border-radius: var(--border-radius-md);
+    background-color: var(--bg-color-tertiary);
+    padding: 4px;
+}
+
+.methodButton {
     flex: 1;
-    border-bottom: 1px solid #edeff1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-sm);
+    background: none;
+    border: none;
+    border-radius: var(--border-radius-sm);
+    font-size: 0.9rem;
+    color: var(--text-color-secondary);
+    cursor: pointer;
+    transition: all var(--transition-speed);
 }
 
-.divider span {
-    padding: 0 10px;
+.methodButton.active {
+    background-color: var(--card-bg);
+    color: var(--color-primary);
+    font-weight: var(--font-weight-medium);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
+.methodIcon {
+    font-size: 0.9rem;
+}
+
+/* Form Styles */
 .loginForm {
-    margin-top: 16px;
+    margin-top: var(--spacing-md);
 }
 
-.formGroup {
-    margin-bottom: 16px;
+.inputGroup {
+    margin-bottom: var(--spacing-md);
 }
 
-.formGroup input {
+.inputWrapper {
+    display: flex;
+    align-items: center;
+    background-color: var(--input-bg);
+    border: 1px solid var(--input-border);
+    border-radius: var(--border-radius-md);
+    padding: 0 var(--spacing-md);
+    transition: border-color var(--transition-speed), box-shadow var(--transition-speed);
+}
+
+.inputWrapper:focus-within {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 2px rgba(40, 167, 15, 0.2);
+}
+
+.inputIcon {
+    color: var(--text-color-muted);
+    margin-right: var(--spacing-sm);
+    font-size: 1rem;
+}
+
+.input {
+    flex: 1;
+    padding: var(--spacing-md) 0;
+    background: transparent;
+    border: none;
+    color: var(--text-color);
+    font-size: 1rem;
     width: 100%;
-    padding: 12px;
-    border: 1px solid #edeff1;
-    border-radius: 4px;
-    font-size: 14px;
 }
 
-.formGroup input:focus {
-    border-color: #0079d3;
+.input:focus {
     outline: none;
 }
 
-.inputError {
-    border-color: #ea0027 !important;
+.input::placeholder {
+    color: var(--text-color-muted);
 }
 
-.errorMessage {
-    color: #ea0027;
-    font-size: 12px;
-    margin-top: 4px;
-}
-
-.rememberForgot {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 16px;
-    font-size: 12px;
-}
-
-.checkbox {
-    display: flex;
-    align-items: center;
-}
-
-.checkbox input {
-    margin-right: 6px;
-}
-
-.forgotLink {
-    color: #0079d3;
-    text-decoration: none;
-}
-
-.forgotLink:hover {
-    text-decoration: underline;
+.srOnly {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
 }
 
 .loginButton {
     width: 100%;
-    padding: 10px;
-    background-color: #0079d3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    background-color: var(--color-primary);
     color: white;
+    font-weight: var(--font-weight-bold);
+    padding: var(--spacing-md);
     border: none;
-    border-radius: 4px;
-    font-size: 14px;
-    font-weight: 600;
+    border-radius: var(--border-radius-md);
+    font-size: 1rem;
     cursor: pointer;
-    transition: background-color 0.2s;
+    transition: background-color var(--transition-speed);
+    margin-top: var(--spacing-lg);
 }
 
 .loginButton:hover {
-    background-color: #016bc6;
+    background-color: #268a09; /* Darker green */
 }
 
 .loginButton:disabled {
-    background-color: #7fbce9;
+    background-color: #6bc257;
     cursor: not-allowed;
+    opacity: 0.8;
 }
 
-.signupPrompt {
-    margin-top: 24px;
+.buttonIcon {
+    font-size: 0.9rem;
+}
+
+/* Error Message */
+.errorMessage {
+    background-color: #ffeded;
+    border: 1px solid #ffcfcf;
+    border-radius: var(--border-radius-md);
+    color: #d63031;
+    padding: var(--spacing-sm) var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+    font-size: 0.9rem;
+}
+
+/* Help Link */
+.helpLink {
     text-align: center;
-    font-size: 12px;
-    color: #878a8c;
+    margin-top: var(--spacing-lg);
 }
 
-.signupPrompt a {
-    color: #0079d3;
+.helpLink a {
+    color: var(--color-primary);
+    font-size: 0.9rem;
     text-decoration: none;
-    font-weight: 600;
 }
 
-.signupPrompt a:hover {
+.helpLink a:hover {
     text-decoration: underline;
+}
+
+/* Footer */
+.footer {
+    color: var(--text-color-muted);
+    font-size: 0.8rem;
+    text-align: center;
+    max-width: 420px;
+}
+
+.footerLinks {
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-xs);
+    flex-wrap: wrap;
+}
+
+.footerLinks a {
+    color: var(--text-color-secondary);
+    text-decoration: none;
+}
+
+.footerLinks a:hover {
+    color: var(--color-primary);
+    text-decoration: underline;
+}
+
+.divider {
+    color: var(--text-color-muted);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 480px) {
+    .loginCard {
+        padding: var(--spacing-lg) var(--spacing-md);
+        box-shadow: none;
+        background-color: transparent;
+    }
+
+    .methodButton span {
+        display: none;
+    }
+
+    .methodButton .methodIcon {
+        font-size: 1.2rem;
+    }
+
+    .loginContainer {
+        padding: var(--spacing-lg) var(--spacing-xs);
+        background-color: var(--card-bg);
+    }
+
+    .footer {
+        padding: 0 var(--spacing-md);
+    }
+}
+
+/* Dark mode adjustments */
+@media (prefers-color-scheme: dark) {
+    .loginButton:hover {
+        background-color: #2ea00f; /* Brighter green for dark mode */
+    }
+
+    .errorMessage {
+        background-color: rgba(255, 0, 0, 0.1);
+        border-color: rgba(255, 0, 0, 0.2);
+    }
 }

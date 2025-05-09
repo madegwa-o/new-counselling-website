@@ -5,9 +5,11 @@ import ThemeContextProvider from "./hooks/themeProvider.tsx";
 import { AuthenticationProvider } from "./hooks/AuthenticationContext.tsx";
 import BaseLayout from "./BaseLayout.tsx";
 import { StrictMode } from "react";
-import { createBrowserRouter, RouterProvider} from "react-router-dom"; // Import BrowserRouter
+import {createBrowserRouter, Navigate, RouterProvider} from "react-router-dom"; // Import BrowserRouter
 import HomePage from './pages/home/homePage.tsx';
 import Login from "./pages/login/login.tsx";
+import Dashboard from "./pages/dashboard/dashboard.tsx";
+
 
 const router = createBrowserRouter([
     {
@@ -17,7 +19,8 @@ const router = createBrowserRouter([
             {
                 path: '/',
                 element: <HomePage />,
-            }
+            },
+
         ]
     },
     // Login and Register routes outside of the BaseLayout
@@ -25,20 +28,16 @@ const router = createBrowserRouter([
         path: '/login',
         element: <Login />,
     },
+    {
+        path: '/dashboard',
+        element: <Dashboard />,
+    },
+    {
+        path: '*',
+        element: <Navigate to="/" replace />
+    },
 
 ]);
-//
-// createRoot(document.getElementById('root')!).render(
-//     <StrictMode>
-//         <BrowserRouter>
-//             <ThemeContextProvider>
-//                 <AuthenticationProvider>
-//                     <BaseLayout />
-//                 </AuthenticationProvider>
-//             </ThemeContextProvider>
-//         </BrowserRouter>
-//     </StrictMode>
-// );
 
 
 createRoot(document.getElementById('root')!).render(

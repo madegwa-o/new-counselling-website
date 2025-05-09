@@ -1,177 +1,208 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useState,type ChangeEvent,type FormEvent,type ReactElement } from 'react';
+import {  FaEnvelope, FaIdCard, FaLock, FaArrowRight } from 'react-icons/fa';
 import styles from './login.module.css';
+import logo from '../../assets/karu-logo.jpg'
+import {useAuthentication} from "../../hooks/AuthenticationContext.tsx";
 
-interface FormData {
-    username: string;
-    password: string;
-}
+export default function Login(): ReactElement {
+    // State to manage form input values
+    const [email, setEmail] = useState<string>('');
+    const [password, setPassword] = useState<string>('');
+    const [regNumber, setRegNumber] = useState<string>('');
+    const {login} = useAuthentication()
 
-const Login: React.FC = () => {
-    const navigate = useNavigate();
-    const [formData, setFormData] = useState<FormData>({
-        username: '',
-        password: '',
-    });
-    const [rememberMe, setRememberMe] = useState<boolean>(false);
-    const [errors, setErrors] = useState<Partial<FormData>>({});
+    // State to track which login method is active
+    const [loginMethod, setLoginMethod] = useState<'email' | 'regNumber'>('email');
+
+    // State for form validation and error handling
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+    const [error, setError] = useState<string | null>(null);
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setFormData({
-            ...formData,
-            [name]: value,
-        });
-        // Clear error when user starts typing again
-        if (errors[name as keyof FormData]) {
-            setErrors({
-                ...errors,
-                [name]: '',
-            });
-        }
-    };
-
-    const validateForm = (): boolean => {
-        const newErrors: Partial<FormData> = {};
-        if (!formData.username.trim()) {
-            newErrors.username = 'Username is required';
-        }
-        if (!formData.password) {
-            newErrors.password = 'Password is required';
-        }
-
-        setErrors(newErrors);
-        return Object.keys(newErrors).length === 0;
-    };
-
-    const handleSubmit = async (e: React.FormEvent) => {
+    // Handle email login form submission
+    const handleEmailLogin = (e: FormEvent<HTMLFormElement>): void => {
         e.preventDefault();
-        if (!validateForm()) return;
-
         setIsSubmitting(true);
-        try {
-            // Simulate API call
-            await new Promise((resolve) => setTimeout(resolve, 1000));
+        setError(null);
 
-            // For demonstration purposes only - in a real app you would:
-            // 1. Call your authentication API
-            // 2. Store tokens, user data, etc.
-            // 3. Redirect user based on authentication result
+        console.log('Logging in with email:', email);
 
-            console.log('Login successful', formData);
-            navigate('/'); // Redirect to home page after successful login
-        } catch (error) {
-            console.error('Login failed', error);
-        } finally {
-            setIsSubmitting(false);
-        }
+      //  login(email, password)
+        window.location.href="/dashboard";
     };
 
-    const handleContinueWithGoogle = () => {
-        // Implement Google OAuth flow
-        console.log('Continue with Google clicked');
+    // Handle registration number login form submission
+    const handleRegNumberLogin = (e: FormEvent<HTMLFormElement>): void => {
+        e.preventDefault();
+        setIsSubmitting(true);
+        setError(null);
+
+        // Here you would integrate with your authentication service
+        console.log('Logging in with registration number:', regNumber);
+
+        login(regNumber, password)
     };
 
-    const handleContinueWithApple = () => {
-        // Implement Apple sign-in flow
-        console.log('Continue with Apple clicked');
+    // Switch between login methods
+    const switchLoginMethod = (method: 'email' | 'regNumber'): void => {
+        setLoginMethod(method);
+        setError(null);
     };
 
     return (
-        <div className={styles.container}>
-            <div className={styles.loginContainer}>
-                <div className={styles.loginArt}>
-                    <div className={styles.artOverlay}>
-                        <h1>Log In</h1>
-                        <p>
-                            By continuing, you agree to our User Agreement and Privacy Policy.
-                        </p>
+        <div className={styles.loginContainer}>
+            <div className={styles.loginCard}>
+                {/* Logo and Header */}
+                <div className={styles.logoContainer}>
+                    <div className={styles.logoWrapper}>
+                        {/* School logo placeholder - replace with your actual logo */}
+                        <div className={styles.logoPlaceholder}>
+                            <img src={logo} className={styles.logo} alt="logo"/>
+                        </div>
                     </div>
+                    <h1 className={styles.title}>Karu Counselling</h1>
+                    <p className={styles.subtitle}>Sign in to access counselling services</p>
                 </div>
-                <div className={styles.loginFormContainer}>
-                    <div className={styles.formWrapper}>
-                        <h2>Log In</h2>
-                        <div className={styles.socialLogins}>
-                            <button
-                                className={styles.socialButton}
-                                onClick={handleContinueWithGoogle}
-                            >
-                                <img src="/icons/google.svg" alt="Google" />
-                                Continue with Google
-                            </button>
-                            <button
-                                className={styles.socialButton}
-                                onClick={handleContinueWithApple}
-                            >
-                                <img src="/icons/apple.svg" alt="Apple" />
-                                Continue with Apple
-                            </button>
-                        </div>
 
-                        <div className={styles.divider}>
-                            <span>OR</span>
-                        </div>
+                {/* Login Method Toggle */}
+                <div className={styles.loginMethodToggle}>
+                    <button
+                        className={`${styles.methodButton} ${loginMethod === 'email' ? styles.active : ''}`}
+                        onClick={() => switchLoginMethod('email')}
+                        type="button"
+                    >
+                        <FaEnvelope className={styles.methodIcon} />
+                        <span>School Email</span>
+                    </button>
+                    <button
+                        className={`${styles.methodButton} ${loginMethod === 'regNumber' ? styles.active : ''}`}
+                        onClick={() => switchLoginMethod('regNumber')}
+                        type="button"
+                    >
+                        <FaIdCard className={styles.methodIcon} />
+                        <span>Registration Number</span>
+                    </button>
+                </div>
 
-                        <form onSubmit={handleSubmit} className={styles.loginForm}>
-                            <div className={styles.formGroup}>
-                                <input
-                                    type="text"
-                                    id="username"
-                                    name="username"
-                                    value={formData.username}
-                                    onChange={handleChange}
-                                    placeholder="Username"
-                                    className={errors.username ? styles.inputError : ''}
-                                />
-                                {errors.username && <div className={styles.errorMessage}>{errors.username}</div>}
-                            </div>
-
-                            <div className={styles.formGroup}>
-                                <input
-                                    type="password"
-                                    id="password"
-                                    name="password"
-                                    value={formData.password}
-                                    onChange={handleChange}
-                                    placeholder="Password"
-                                    className={errors.password ? styles.inputError : ''}
-                                />
-                                {errors.password && <div className={styles.errorMessage}>{errors.password}</div>}
-                            </div>
-
-                            <div className={styles.rememberForgot}>
-                                <div className={styles.checkbox}>
-                                    <input
-                                        type="checkbox"
-                                        id="rememberMe"
-                                        checked={rememberMe}
-                                        onChange={() => setRememberMe(!rememberMe)}
-                                    />
-                                    <label htmlFor="rememberMe">Stay logged in</label>
-                                </div>
-                                <Link to="/forgot-password" className={styles.forgotLink}>
-                                    Forgot password?
-                                </Link>
-                            </div>
-
-                            <button
-                                type="submit"
-                                className={styles.loginButton}
-                                disabled={isSubmitting}
-                            >
-                                {isSubmitting ? 'Logging in...' : 'Log In'}
-                            </button>
-                        </form>
-
-                        <div className={styles.signupPrompt}>
-                            New to Reddit? <Link to="/register">Sign Up</Link>
-                        </div>
+                {/* Error Message */}
+                {error && (
+                    <div className={styles.errorMessage}>
+                        {error}
                     </div>
+                )}
+
+                {/* Email & Password Login Form */}
+                {loginMethod === 'email' && (
+                    <form className={styles.loginForm} onSubmit={handleEmailLogin}>
+                        <div className={styles.inputGroup}>
+                            <label htmlFor="email" className={styles.srOnly}>School Email</label>
+                            <div className={styles.inputWrapper}>
+                                <FaEnvelope className={styles.inputIcon} />
+                                <input
+                                    id="email"
+                                    type="email"
+                                    placeholder="University Email"
+                                    className={styles.input}
+                                    value={email}
+                                    onChange={(e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
+                                    required
+                                    autoFocus
+                                />
+                            </div>
+                        </div>
+                        <div className={styles.inputGroup}>
+                            <label htmlFor="password" className={styles.srOnly}>Password</label>
+                            <div className={styles.inputWrapper}>
+                                <FaLock className={styles.inputIcon} />
+                                <input
+                                    id="password"
+                                    type="password"
+                                    placeholder="Password"
+                                    className={styles.input}
+                                    value={password}
+                                    onChange={(e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
+                                    required
+                                />
+                            </div>
+                        </div>
+                        <button
+                            type="submit"
+                            className={styles.loginButton}
+                            disabled={isSubmitting}
+                        >
+                            {isSubmitting ? 'Signing in...' : (
+                                <>
+                                    Sign In <FaArrowRight className={styles.buttonIcon} />
+                                </>
+                            )}
+                        </button>
+                    </form>
+                )}
+
+                {/* Registration Number Login Form */}
+                {loginMethod === 'regNumber' && (
+                    <form className={styles.loginForm} onSubmit={handleRegNumberLogin}>
+                        <div className={styles.inputGroup}>
+                            <label htmlFor="regNumber" className={styles.srOnly}>Registration Number</label>
+                            <div className={styles.inputWrapper}>
+                                <FaIdCard className={styles.inputIcon} />
+                                <input
+                                    id="regNumber"
+                                    type="text"
+                                    placeholder="University Registration Number"
+                                    className={styles.input}
+                                    value={regNumber}
+                                    onChange={(e: ChangeEvent<HTMLInputElement>) => setRegNumber(e.target.value)}
+                                    required
+                                    autoFocus
+                                />
+                            </div>
+                        </div>
+                        <div className={styles.inputGroup}>
+                            <label htmlFor="password" className={styles.srOnly}>Password</label>
+                            <div className={styles.inputWrapper}>
+                                <FaLock className={styles.inputIcon} />
+                                <input
+                                    id="password"
+                                    type="password"
+                                    placeholder="Password"
+                                    className={styles.input}
+                                    value={password}
+                                    onChange={(e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
+                                    required
+                                />
+                            </div>
+                        </div>
+                        <button
+                            type="submit"
+                            className={styles.loginButton}
+                            disabled={isSubmitting}
+                        >
+                            {isSubmitting ? 'Verifying...' : (
+                                <>
+                                    Verify Registration <FaArrowRight className={styles.buttonIcon} />
+                                </>
+                            )}
+                        </button>
+                    </form>
+                )}
+
+                {/* Help Link */}
+                <div className={styles.helpLink}>
+                    <a href="/help">Need help logging in?</a>
+                </div>
+            </div>
+
+            {/* Footer */}
+            <div className={styles.footer}>
+                <p>© {new Date().getFullYear()} Karatuna University. All rights reserved.</p>
+                <div className={styles.footerLinks}>
+                    <a href="/privacy">Privacy Policy</a>
+                    <span className={styles.divider}>•</span>
+                    <a href="/terms">Terms of Service</a>
+                    <span className={styles.divider}>•</span>
+                    <a href="/contact">Contact</a>
                 </div>
             </div>
         </div>
     );
-};
-
-export default Login;
+}

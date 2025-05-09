@@ -24,12 +24,13 @@ export function useAuthentication() {
 }
 
 export function AuthenticationProvider({children}: {children: ReactNode})  {
-    const [accessToken, setAccessToken] = useState<string>(' ');
+    const [accessToken, setAccessToken] = useState<string>('');
     const backendUrl = import.meta.env.VITE_BACKEND_URL;
     const productionUrl = import.meta.env.VITE_PRODUCTION_URL;
 
     // Added type annotations to parameters
     const login = async (username: string, password: string): Promise<void> => {
+        console.log('Login called: ');
         try {
             const response = await fetch(`${backendUrl}/auth/login`, {
                 method: 'POST',
@@ -44,8 +45,11 @@ export function AuthenticationProvider({children}: {children: ReactNode})  {
                 throw new Error('Login failed');
             }
 
+            console.log('Login', response);
+
             const data = await response.json();
             setAccessToken(data.accessToken);
+            window.location.href = '/dashboard';
         } catch (error: unknown) {
             // Properly handle error with type checking
             if (error instanceof Error) {
