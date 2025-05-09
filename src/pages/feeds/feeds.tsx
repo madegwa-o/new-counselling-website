@@ -1,5 +1,5 @@
 // import {useCallback, useEffect, useState} from 'react';
-// import styles from './HomePage.module.css';
+// import styles from './homePage.module.css';
 // import clubImage from '../../assets/club1.png'
 // import clubImage1 from '../../assets/club1.png'
 // import {useAuthentication} from "../../hooks/AuthenticationContext.tsx";
