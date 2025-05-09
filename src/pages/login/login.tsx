@@ -1,15 +1,17 @@
-import { useState,type ChangeEvent,type FormEvent,type ReactElement } from 'react';
+import { useState, type ChangeEvent, type FormEvent, type ReactElement, useEffect } from 'react';
 import {  FaEnvelope, FaIdCard, FaLock, FaArrowRight } from 'react-icons/fa';
 import styles from './login.module.css';
 import logo from '../../assets/karu-logo.jpg'
-import {useAuthentication} from "../../hooks/AuthenticationContext.tsx";
+import { useAuthentication } from "../../hooks/AuthenticationContext.tsx";
+import {useNavigate} from "react-router-dom";
 
 export default function Login(): ReactElement {
+    const navigate = useNavigate();
     // State to manage form input values
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [regNumber, setRegNumber] = useState<string>('');
-    const {login} = useAuthentication()
+    const { login, authError, clearError } = useAuthentication();
 
     // State to track which login method is active
     const [loginMethod, setLoginMethod] = useState<'email' | 'regNumber'>('email');
@@ -18,34 +20,71 @@ export default function Login(): ReactElement {
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
 
+    // Update local error state when authError changes
+    useEffect(() => {
+        if (authError) {
+            setError(authError);
+            setIsSubmitting(false);
+        }
+    }, [authError]);
+
     // Handle email login form submission
-    const handleEmailLogin = (e: FormEvent<HTMLFormElement>): void => {
+    const handleEmailLogin = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
         e.preventDefault();
         setIsSubmitting(true);
         setError(null);
+        if (clearError) clearError();
 
         console.log('Logging in with email:', email);
 
-      //  login(email, password)
-        window.location.href="/dashboard";
+        try {
+            const {success} = await login(email, password);
+
+
+            if (!success) {
+                setIsSubmitting(false);
+                setError( 'Login failed');
+            }
+            navigate('/dashboard');
+        } catch (error) {
+            setIsSubmitting(false);
+            setError('An error occurred during login');
+            console.error(error);
+        }
     };
 
     // Handle registration number login form submission
-    const handleRegNumberLogin = (e: FormEvent<HTMLFormElement>): void => {
+    const handleRegNumberLogin = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
         e.preventDefault();
         setIsSubmitting(true);
         setError(null);
+        if (clearError) clearError();
 
         // Here you would integrate with your authentication service
         console.log('Logging in with registration number:', regNumber);
 
-        login(regNumber, password)
+        try {
+            const {success} = await login(regNumber, password);
+
+            console.log('f**:', success);
+
+            if (!success) {
+                setIsSubmitting(false);
+                setError( 'Login failed');
+            }
+            navigate('/dashboard');
+        } catch (error) {
+            setIsSubmitting(false);
+            setError('An error occurred during login');
+            console.error(error);
+        }
     };
 
     // Switch between login methods
     const switchLoginMethod = (method: 'email' | 'regNumber'): void => {
         setLoginMethod(method);
         setError(null);
+        if (clearError) clearError();
     };
 
     return (
@@ -158,11 +197,11 @@ export default function Login(): ReactElement {
                             </div>
                         </div>
                         <div className={styles.inputGroup}>
-                            <label htmlFor="password" className={styles.srOnly}>Password</label>
+                            <label htmlFor="regPassword" className={styles.srOnly}>Password</label>
                             <div className={styles.inputWrapper}>
                                 <FaLock className={styles.inputIcon} />
                                 <input
-                                    id="password"
+                                    id="regPassword"
                                     type="password"
                                     placeholder="Password"
                                     className={styles.input}

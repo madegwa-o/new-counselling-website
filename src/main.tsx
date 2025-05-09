@@ -9,6 +9,7 @@ import {createBrowserRouter, Navigate, RouterProvider} from "react-router-dom"; 
 import HomePage from './pages/home/homePage.tsx';
 import Login from "./pages/login/login.tsx";
 import Dashboard from "./pages/dashboard/dashboard.tsx";
+import ProtectedRoute from "./utils/ProtectedRoute.tsx";
 
 
 const router = createBrowserRouter([
@@ -30,7 +31,11 @@ const router = createBrowserRouter([
     },
     {
         path: '/dashboard',
-        element: <Dashboard />,
+        element: (
+            <ProtectedRoute>
+                <Dashboard />
+            </ProtectedRoute>
+        ),
     },
     {
         path: '*',

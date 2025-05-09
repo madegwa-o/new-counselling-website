@@ -1,19 +1,34 @@
-import {createContext, useState, useContext,type Dispatch,type SetStateAction,type ReactNode} from "react";
+import {createContext, useState, useContext, type ReactNode} from "react";
 
-// Updated interface to include login and logout functions
-type AuthContextType = {
+// Updated interface with the new return type for login
+export interface AuthContextType {
     accessToken: string;
-    setAccessToken: Dispatch<SetStateAction<string>>;
-    login: (username: string, password: string) => Promise<void>;
+    login: (username: string, password: string) => Promise<{success: boolean, error?: string}>;
     logout: () => void;
+    authError: string | null;
+    clearError: () => void;
     baseUrl: string;
     productionUrl: string;
+    isAuthenticated: boolean;
+    setIsAuthenticated: (status: boolean) => void;
+    setAccessToken: (token: string) => void;
+}
+
+// Provide default values that match the interface
+const defaultContext: AuthContextType = {
+    accessToken: '',
+    login: async () => ({ success: false }),
+    logout: () => {},
+    authError: null,
+    clearError: () => {},
+    baseUrl: '',
+    productionUrl: '',
+    isAuthenticated: false,
+    setIsAuthenticated: () => {},
+    setAccessToken: () => {},
 };
 
-// Properly typed contextRef
-let contextRef: AuthContextType | null = null;
-
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+export const AuthContext = createContext<AuthContextType>(defaultContext);
 
 export function useAuthentication() {
     const context = useContext(AuthContext);
@@ -25,14 +40,18 @@ export function useAuthentication() {
 
 export function AuthenticationProvider({children}: {children: ReactNode})  {
     const [accessToken, setAccessToken] = useState<string>('');
+    const [isAuthenticated, setIsAuthenticated] = useState<boolean>(!!accessToken);
+    const [authError, setAuthError] = useState<string | null>(null);
     const backendUrl = import.meta.env.VITE_BACKEND_URL;
-    const productionUrl = import.meta.env.VITE_PRODUCTION_URL;
+    const productionUrl = import.meta.env.VITE_PRODUCTION_URL || '';
 
-    // Added type annotations to parameters
-    const login = async (username: string, password: string): Promise<void> => {
-        console.log('Login called: ');
+    // Return type updated to match the interface
+    const login = async (username: string, password: string): Promise<{success: boolean, error?: string}> => {
+        console.log('username: ', username, "password: ", password);
+        setAuthError(null);
+
         try {
-            const response = await fetch(`${backendUrl}/auth/login`, {
+            const response = await fetch(`${backendUrl}/auth/v1/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -41,22 +60,33 @@ export function AuthenticationProvider({children}: {children: ReactNode})  {
                 body: JSON.stringify({ username, password }),
             });
 
+            const data = await response.json();
+
             if (!response.ok) {
-                throw new Error('Login failed');
+                // Handle specific error messages from backend
+                setAuthError(data.message);
+                return { success: false, error: data.message };
             }
 
             console.log('Login', response);
 
-            const data = await response.json();
             setAccessToken(data.accessToken);
-            window.location.href = '/dashboard';
+            setIsAuthenticated(true)
+
+
+            return { success: true };
         } catch (error: unknown) {
             // Properly handle error with type checking
+            let errorMessage = 'An unknown error occurred';
             if (error instanceof Error) {
+                errorMessage = error.message;
                 console.error(error.message);
             } else {
                 console.error('An unknown error occurred');
             }
+
+            setAuthError(errorMessage);
+            return { success: false, error: errorMessage };
         }
     };
 
@@ -64,22 +94,24 @@ export function AuthenticationProvider({children}: {children: ReactNode})  {
         setAccessToken('');
     };
 
-    const contextValue: AuthContextType = {
-        accessToken,
-        setAccessToken,
-        login,
-        logout,
-        baseUrl: backendUrl,
-        productionUrl
+    const clearError = (): void => {
+        setAuthError(null);
     };
 
-    contextRef = contextValue;
-
     return (
-        <AuthContext.Provider value={contextValue}>
+        <AuthContext.Provider value={{
+            accessToken,
+            login,
+            logout,
+            authError,
+            clearError,
+            baseUrl: backendUrl,
+            productionUrl,
+            isAuthenticated,
+            setIsAuthenticated,
+            setAccessToken ,
+        }}>
             {children}
         </AuthContext.Provider>
     );
 }
-
-export const getAuthContext = (): AuthContextType | null => contextRef;
