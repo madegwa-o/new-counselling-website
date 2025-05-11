@@ -51,7 +51,7 @@ export function AuthenticationProvider({children}: {children: ReactNode})  {
         setAuthError(null);
 
         try {
-            const response = await fetch(`${backendUrl}/auth/v1/login`, {
+            const response = await fetch(`${backendUrl}/api/v1/auth/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -115,3 +115,5 @@ export function AuthenticationProvider({children}: {children: ReactNode})  {
         </AuthContext.Provider>
     );
 }
+
+export const getAuthContext  = () => useContext(AuthContext);

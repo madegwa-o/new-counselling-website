@@ -21,7 +21,7 @@ axiosInstance.interceptors.response.use(
             try {
                 console.log("Authentication failed! Attempting token refresh...");
                 const refreshResponse = await axios.get(
-                    `${baseURL}/auth/v1/refresh`,
+                    `${baseURL}/api/v1/auth/refresh`,
                     { withCredentials: true }
                 );
 

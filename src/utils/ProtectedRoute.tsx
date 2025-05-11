@@ -14,7 +14,7 @@ const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
             console.log('refreshing the token');
             if (!isAuthenticated) {
                 try {
-                    const response = await fetch(`${baseurl}/auth/v1/refresh`, {
+                    const response = await fetch(`${baseurl}/api/v1/auth/refresh`, {
                         method: 'GET',
                         credentials: 'include', // Include cookies for refresh token
                     });

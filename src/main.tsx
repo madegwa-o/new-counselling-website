@@ -8,8 +8,9 @@ import { StrictMode } from "react";
 import {createBrowserRouter, Navigate, RouterProvider} from "react-router-dom"; // Import BrowserRouter
 import HomePage from './pages/home/homePage.tsx';
 import Login from "./pages/login/login.tsx";
-import Dashboard from "./pages/dashboard/dashboard.tsx";
+import Dashboard from "./components/booking/Dashboard.tsx";
 import ProtectedRoute from "./utils/ProtectedRoute.tsx";
+import {WebSocketProvider} from "./hooks/WebSocketContext.tsx";
 
 
 const router = createBrowserRouter([
@@ -47,10 +48,12 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')!).render(
     <StrictMode>
-            <ThemeContextProvider>
+        <ThemeContextProvider>
+            <WebSocketProvider>
                 <AuthenticationProvider>
                     <RouterProvider  router={router}/>
                 </AuthenticationProvider>
-            </ThemeContextProvider>
+            </WebSocketProvider>
+        </ThemeContextProvider>
     </StrictMode>
 );
